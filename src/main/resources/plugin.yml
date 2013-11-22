@@ -9,6 +9,9 @@ permissions:
     tardis.shopdoor:
         description: Allow players to add and remove TARDIS Shop Doors.
         default: op
+    tardis.shop:
+        description: Allow players to use TARDIS Shop Doors.
+        default: op
 commands:
     tsd:
         usage: /<command> [name]
