@@ -1,0 +1,61 @@
+/*
+ *  Copyright 2013 eccentric_nz.
+ */
+package me.eccentric_nz.tardisshopdoor;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
+
+/**
+ *
+ * @author eccentric_nz
+ */
+public class TardisShopDoorKey {
+
+    TardisPrefsDatabase service = TardisPrefsDatabase.getInstance();
+    Connection connection = service.getConnection();
+    FileConfiguration config;
+    Material defaultkey;
+
+    public TardisShopDoorKey(Plugin tardis) {
+        String keypath = tardis.getDataFolder() + File.separator + "config.yml";
+        config = YamlConfiguration.loadConfiguration(new File(keypath));
+        defaultkey = Material.valueOf(config.getString("key"));
+    }
+
+    public Material getKeyPref(String player) {
+        Material key = defaultkey;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        String query = "SELECT key FROM player_prefs WHERE player = '" + player + "'";
+        try {
+            statement = connection.prepareStatement(query);
+            rs = statement.executeQuery();
+            if (rs.isBeforeFirst()) {
+                key = Material.valueOf(rs.getString("key"));
+            }
+        } catch (SQLException e) {
+            System.err.println("[TARDIS Shop Door] ResultSet error for player_prefs table! " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("[TARDIS Shop Door] Error closing player_prefs table! " + e.getMessage());
+            }
+        }
+        return key;
+    }
+}

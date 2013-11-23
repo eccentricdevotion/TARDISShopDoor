@@ -4,8 +4,10 @@
 package me.eccentric_nz.tardisshopdoor;
 
 import me.eccentric_nz.tardisshopdoor.TardisShopDoor.DIRECTION;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -71,17 +73,23 @@ public class TardisShopDoorListener implements Listener {
                     plugin.trackAdd.remove(p.getName());
                 }
             } else if (p.hasPermission("tardis.shop")) {
-                // we're in teleport mode
-                TardisShopDoorResultSet rs = new TardisShopDoorResultSet();
-                TardisShopDoorData from = rs.resultSet(loc);
-                if (from != null) {
-                    // get the other side of the door
-                    int type = (from.getType() == 0) ? 1 : 0;
-                    TardisShopDoorData to = rs.resultSet(from.getName(), type);
-                    if (to != null) {
-                        // teleport the player
-                        tp(p, to, from);
+                // get their key prefs
+                Material key = new TardisShopDoorKey(plugin.tardis).getKeyPref(p.getName());
+                if (p.getItemInHand().getType().equals(key)) {
+                    // we're in teleport mode
+                    TardisShopDoorResultSet rs = new TardisShopDoorResultSet();
+                    TardisShopDoorData from = rs.resultSet(loc);
+                    if (from != null) {
+                        // get the other side of the door
+                        int type = (from.getType() == 0) ? 1 : 0;
+                        TardisShopDoorData to = rs.resultSet(from.getName(), type);
+                        if (to != null) {
+                            // teleport the player
+                            tp(p, to, from);
+                        }
                     }
+                } else {
+                    p.sendMessage("[TARDIS Door Shop] You must click the door with your TARDIS key!");
                 }
             }
         }
@@ -89,6 +97,12 @@ public class TardisShopDoorListener implements Listener {
 
     private void tp(Player p, TardisShopDoorData to, TardisShopDoorData from) {
         Location l = getLocationFromBukkitString(to.getLocation());
+        try {
+            Class.forName("org.bukkit.Sound");
+            p.playSound(p.getLocation(), Sound.DOOR_OPEN, 1, 1);
+        } catch (ClassNotFoundException e) {
+            l.getWorld().playEffect(l, Effect.DOOR_TOGGLE, 0);
+        }
         int getx = l.getBlockX();
         int getz = l.getBlockZ();
         // adjust position
