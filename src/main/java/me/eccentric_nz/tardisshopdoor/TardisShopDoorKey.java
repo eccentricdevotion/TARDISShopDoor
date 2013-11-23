@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -40,7 +39,8 @@ public class TardisShopDoorKey {
             statement = connection.prepareStatement(query);
             rs = statement.executeQuery();
             if (rs.isBeforeFirst()) {
-                key = Material.valueOf(rs.getString("key"));
+                String thekey = rs.getString("key");
+                key = (!thekey.equals("")) ? Material.valueOf(thekey) : defaultkey;
             }
         } catch (SQLException e) {
             System.err.println("[TARDIS Shop Door] ResultSet error for player_prefs table! " + e.getMessage());
