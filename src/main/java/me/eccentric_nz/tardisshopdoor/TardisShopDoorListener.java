@@ -97,12 +97,6 @@ public class TardisShopDoorListener implements Listener {
 
     private void tp(Player p, TardisShopDoorData to, TardisShopDoorData from) {
         Location l = getLocationFromBukkitString(to.getLocation());
-        try {
-            Class.forName("org.bukkit.Sound");
-            p.playSound(p.getLocation(), Sound.DOOR_OPEN, 1, 1);
-        } catch (ClassNotFoundException e) {
-            l.getWorld().playEffect(l, Effect.DOOR_TOGGLE, 0);
-        }
         int getx = l.getBlockX();
         int getz = l.getBlockZ();
         // adjust position
@@ -129,6 +123,12 @@ public class TardisShopDoorListener implements Listener {
         l.setYaw(p.getLocation().getYaw() + adjustYaw(from.getDirection(), to.getDirection()));
         // teleport
         p.teleport(l);
+        try {
+            Class.forName("org.bukkit.Sound");
+            p.playSound(p.getLocation(), Sound.DOOR_OPEN, 1, 1);
+        } catch (ClassNotFoundException e) {
+            l.getWorld().playEffect(l, Effect.DOOR_TOGGLE, 0);
+        }
     }
 
     private Location getLocationFromBukkitString(String string) {
