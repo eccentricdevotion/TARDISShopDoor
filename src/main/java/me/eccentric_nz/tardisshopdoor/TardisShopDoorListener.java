@@ -75,11 +75,11 @@ public class TardisShopDoorListener implements Listener {
             } else if (p.hasPermission("tardis.shop")) {
                 // get their key prefs
                 Material key = new TardisShopDoorKey(plugin.tardis).getKeyPref(p.getName());
-                if (p.getItemInHand().getType().equals(key)) {
-                    // we're in teleport mode
-                    TardisShopDoorResultSet rs = new TardisShopDoorResultSet();
-                    TardisShopDoorData from = rs.resultSet(loc);
-                    if (from != null) {
+                // we're in teleport mode
+                TardisShopDoorResultSet rs = new TardisShopDoorResultSet();
+                TardisShopDoorData from = rs.resultSet(loc);
+                if (from != null) {
+                    if (p.getItemInHand().getType().equals(key)) {
                         // get the other side of the door
                         int type = (from.getType() == 0) ? 1 : 0;
                         TardisShopDoorData to = rs.resultSet(from.getName(), type);
@@ -87,9 +87,9 @@ public class TardisShopDoorListener implements Listener {
                             // teleport the player
                             tp(p, to, from);
                         }
+                    } else {
+                        p.sendMessage("[TARDIS Door Shop] You must click the door with your TARDIS key!");
                     }
-                } else {
-                    p.sendMessage("[TARDIS Door Shop] You must click the door with your TARDIS key!");
                 }
             }
         }

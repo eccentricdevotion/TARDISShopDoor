@@ -4,7 +4,6 @@
 package me.eccentric_nz.tardisshopdoor;
 
 import me.eccentric_nz.tardisshopdoor.TardisShopDoor.DIRECTION;
-import org.bukkit.block.BlockFace;
 
 /**
  *
