@@ -40,7 +40,7 @@ public class TardisShopDoorCommands implements CommandExecutor {
                         TardisShopDoorAdd a = new TardisShopDoorAdd();
                         a.setName(args[0]);
                         a.setType(0);
-                        plugin.trackAdd.put(p.getName(), a);
+                        plugin.trackAdd.put(p.getUniqueId(), a);
                         p.sendMessage("[TARDIS Door Shop] Click on the first door.");
                         return true;
                     } else {

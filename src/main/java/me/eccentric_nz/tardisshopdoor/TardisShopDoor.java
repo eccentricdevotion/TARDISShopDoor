@@ -3,6 +3,7 @@ package me.eccentric_nz.tardisshopdoor;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.UUID;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,7 +12,7 @@ public class TardisShopDoor extends JavaPlugin {
     public static TardisShopDoor plugin;
     TardisShopDoorDatabase service = TardisShopDoorDatabase.getInstance();
     TardisPrefsDatabase keyprefs = TardisPrefsDatabase.getInstance();
-    public HashMap<String, TardisShopDoorAdd> trackAdd = new HashMap<String, TardisShopDoorAdd>();
+    public HashMap<UUID, TardisShopDoorAdd> trackAdd = new HashMap<UUID, TardisShopDoorAdd>();
     public Plugin tardis;
 
     @Override

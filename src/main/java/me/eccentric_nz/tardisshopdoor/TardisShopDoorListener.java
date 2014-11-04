@@ -53,28 +53,29 @@ public class TardisShopDoorListener implements Listener {
         Player p = event.getPlayer();
         Block b = event.getClickedBlock();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && b.getType().equals(Material.IRON_DOOR_BLOCK)) {
+            @SuppressWarnings("deprecation")
             byte data = b.getData();
             // is it the top or bottom half of the door?
             String loc = (data < 8) ? b.getLocation().toString() : b.getRelative(BlockFace.DOWN).getLocation().toString();
-            if (plugin.trackAdd.containsKey(p.getName())) {
+            if (plugin.trackAdd.containsKey(p.getUniqueId())) {
                 // we're in add mode
                 // get door direction
                 String direction = getPlayersDirection(p);
-                TardisShopDoorAdd a = plugin.trackAdd.get(p.getName());
+                TardisShopDoorAdd a = plugin.trackAdd.get(p.getUniqueId());
                 int type = a.getType();
                 // save the door
                 new TardisShopDoorQueries().doInsert(a.getName(), loc, type, direction);
                 if (type == 0) {
                     a.setType(1);
-                    plugin.trackAdd.put(p.getName(), a);
+                    plugin.trackAdd.put(p.getUniqueId(), a);
                     p.sendMessage("[TARDIS Door Shop] First door saved! Click on the second door.");
                 } else {
                     p.sendMessage("[TARDIS Door Shop] Second door saved!");
-                    plugin.trackAdd.remove(p.getName());
+                    plugin.trackAdd.remove(p.getUniqueId());
                 }
             } else if (p.hasPermission("tardis.shop")) {
                 // get their key prefs
-                Material key = new TardisShopDoorKey(plugin.tardis).getKeyPref(p.getName());
+                Material key = new TardisShopDoorKey(plugin.tardis).getKeyPref(p.getUniqueId().toString());
                 // we're in teleport mode
                 TardisShopDoorResultSet rs = new TardisShopDoorResultSet();
                 TardisShopDoorData from = rs.resultSet(loc);

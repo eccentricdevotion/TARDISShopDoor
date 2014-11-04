@@ -27,14 +27,14 @@ public class TardisShopDoorKey {
     public TardisShopDoorKey(Plugin tardis) {
         String keypath = tardis.getDataFolder() + File.separator + "config.yml";
         config = YamlConfiguration.loadConfiguration(new File(keypath));
-        defaultkey = Material.valueOf(config.getString("key"));
+        defaultkey = Material.valueOf(config.getString("preferences.key").toUpperCase());
     }
 
-    public Material getKeyPref(String player) {
+    public Material getKeyPref(String uuid) {
         Material key = defaultkey;
         PreparedStatement statement = null;
         ResultSet rs = null;
-        String query = "SELECT key FROM player_prefs WHERE player = '" + player + "'";
+        String query = "SELECT key FROM player_prefs WHERE uuid = '" + uuid + "'";
         try {
             statement = connection.prepareStatement(query);
             rs = statement.executeQuery();
