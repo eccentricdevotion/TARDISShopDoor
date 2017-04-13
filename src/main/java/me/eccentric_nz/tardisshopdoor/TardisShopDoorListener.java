@@ -7,7 +7,6 @@ import me.eccentric_nz.tardisshopdoor.TardisShopDoor.DIRECTION;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -80,7 +79,7 @@ public class TardisShopDoorListener implements Listener {
                 TardisShopDoorResultSet rs = new TardisShopDoorResultSet();
                 TardisShopDoorData from = rs.resultSet(loc);
                 if (from != null) {
-                    if (p.getItemInHand().getType().equals(key)) {
+                    if (p.getInventory().getItemInMainHand().getType().equals(key)) {
                         // get the other side of the door
                         int type = (from.getType() == 0) ? 1 : 0;
                         TardisShopDoorData to = rs.resultSet(from.getName(), type);
@@ -124,12 +123,7 @@ public class TardisShopDoorListener implements Listener {
         l.setYaw(p.getLocation().getYaw() + adjustYaw(from.getDirection(), to.getDirection()));
         // teleport
         p.teleport(l);
-        try {
-            Class.forName("org.bukkit.Sound");
-            p.playSound(p.getLocation(), Sound.DOOR_OPEN, 1, 1);
-        } catch (ClassNotFoundException e) {
-            l.getWorld().playEffect(l, Effect.DOOR_TOGGLE, 0);
-        }
+        l.getWorld().playEffect(l, Effect.DOOR_TOGGLE, 0);
     }
 
     private Location getLocationFromBukkitString(String string) {
