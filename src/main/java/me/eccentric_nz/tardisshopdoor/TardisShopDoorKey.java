@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -27,7 +29,7 @@ public class TardisShopDoorKey {
     public TardisShopDoorKey(Plugin tardis) {
         String keypath = tardis.getDataFolder() + File.separator + "config.yml";
         config = YamlConfiguration.loadConfiguration(new File(keypath));
-        defaultkey = Material.valueOf(config.getString("preferences.key").toUpperCase());
+        defaultkey = Material.valueOf(Objects.requireNonNull(config.getString("preferences.key")).toUpperCase());
     }
 
     public Material getKeyPref(String uuid) {

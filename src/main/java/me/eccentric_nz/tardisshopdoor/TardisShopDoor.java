@@ -3,6 +3,7 @@ package me.eccentric_nz.tardisshopdoor;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,7 +13,7 @@ public class TardisShopDoor extends JavaPlugin {
     public static TardisShopDoor plugin;
     TardisShopDoorDatabase service = TardisShopDoorDatabase.getInstance();
     TardisPrefsDatabase keyprefs = TardisPrefsDatabase.getInstance();
-    public HashMap<UUID, TardisShopDoorAdd> trackAdd = new HashMap<UUID, TardisShopDoorAdd>();
+    public HashMap<UUID, TardisShopDoorAdd> trackAdd = new HashMap<>();
     public Plugin tardis;
 
     @Override
@@ -31,7 +32,7 @@ public class TardisShopDoor extends JavaPlugin {
         saveDefaultConfig();
         loadDatabases();
         getServer().getPluginManager().registerEvents(new TardisShopDoorListener(this), this);
-        getCommand("tsd").setExecutor(new TardisShopDoorCommands(this));
+        Objects.requireNonNull(getCommand("tsd")).setExecutor(new TardisShopDoorCommands(this));
     }
 
     private void loadDatabases() {
@@ -42,8 +43,9 @@ public class TardisShopDoor extends JavaPlugin {
             service.createTables();
             // TARDIS dbatabase
             tardis = getServer().getPluginManager().getPlugin("TARDIS");
-            String keypath = tardis.getDataFolder() + File.separator + "TARDIS.db";
-            keyprefs.setConnection(keypath);
+            assert tardis != null;
+            String keyPath = tardis.getDataFolder() + File.separator + "TARDIS.db";
+            keyprefs.setConnection(keyPath);
         } catch (Exception e) {
             System.err.println("[TARDIS Shop Door] Connection and Tables Error: " + e);
         }
@@ -51,6 +53,6 @@ public class TardisShopDoor extends JavaPlugin {
 
     public enum DIRECTION {
 
-        EAST, SOUTH, WEST, NORTH;
+        EAST, SOUTH, WEST, NORTH
     }
 }

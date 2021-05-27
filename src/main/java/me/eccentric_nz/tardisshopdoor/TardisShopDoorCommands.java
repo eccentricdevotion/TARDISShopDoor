@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -21,7 +22,7 @@ public class TardisShopDoorCommands implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("tsd")) {
             Player p = null;
             if (sender instanceof Player) {
@@ -42,11 +43,10 @@ public class TardisShopDoorCommands implements CommandExecutor {
                         a.setType(0);
                         plugin.trackAdd.put(p.getUniqueId(), a);
                         p.sendMessage("[TARDIS Door Shop] Click on the first door.");
-                        return true;
                     } else {
                         p.sendMessage("[TARDIS Door Shop] A door set already exists with that name.");
-                        return true;
                     }
+                    return true;
                 }
                 if (args.length == 2 && args[0].equals("remove")) {
                     // check the name
@@ -55,11 +55,10 @@ public class TardisShopDoorCommands implements CommandExecutor {
                         // delete records
                         new TardisShopDoorQueries().doDelete(args[1]);
                         p.sendMessage("[TARDIS Door Shop] The door set called '" + args[1] + "' was removed.");
-                        return true;
                     } else {
                         p.sendMessage("[TARDIS Door Shop] Could not find a door set with that name.");
-                        return true;
                     }
+                    return true;
                 }
             }
         }
