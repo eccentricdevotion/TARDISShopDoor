@@ -1,4 +1,4 @@
 TARDISShopDoor
 ==============
 
-A standalone door to door teleportion plugin
+A standalone door-to-door teleportion plugin

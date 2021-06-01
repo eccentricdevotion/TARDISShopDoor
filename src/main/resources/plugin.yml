@@ -6,15 +6,15 @@ startup: postworld
 depend: [TARDIS]
 version: '1.0'
 permissions:
-    tardis.shopdoor:
-        description: Allow players to add and remove TARDIS Shop Doors.
-        default: op
-    tardis.shop:
-        description: Allow players to use TARDIS Shop Doors.
-        default: op
+  tardis.shopdoor:
+    description: Allow players to add and remove TARDIS Shop Doors.
+    default: op
+  tardis.shop:
+    description: Allow players to use TARDIS Shop Doors.
+    default: op
 commands:
-    tsd:
-        usage: /<command> [name]
-        description: Set or remove a pair of TARDIS Shop Doors
-        permission: tardis.shopdoor
-        permission-message: You don't have the permission <permission> to use this command
+  tsd:
+    usage: /<command> [name]
+    description: Set or remove a pair of TARDIS Shop Doors
+    permission: tardis.shopdoor
+    permission-message: You don't have the permission <permission> to use this command
