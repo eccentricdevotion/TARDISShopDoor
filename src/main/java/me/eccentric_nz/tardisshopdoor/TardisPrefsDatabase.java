@@ -12,28 +12,28 @@ import java.sql.Statement;
  */
 public class TardisPrefsDatabase {
 
-	private static final TardisPrefsDatabase instance = new TardisPrefsDatabase();
-	public Connection connection = null;
-	public Statement statement = null;
+    private static final TardisPrefsDatabase instance = new TardisPrefsDatabase();
+    public Connection connection = null;
+    public Statement statement = null;
 
-	public static synchronized TardisPrefsDatabase getInstance() {
-		return instance;
-	}
+    public static synchronized TardisPrefsDatabase getInstance() {
+        return instance;
+    }
 
-	public Connection getConnection() {
-		return connection;
-	}
+    public Connection getConnection() {
+        return connection;
+    }
 
-	public void setConnection(String path) throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		connection = DriverManager.getConnection("jdbc:sqlite:" + path);
-	}
+    public void setConnection(String path) throws Exception {
+        Class.forName("org.sqlite.JDBC");
+        connection = DriverManager.getConnection("jdbc:sqlite:" + path);
+    }
 
-	/**
-	 * @return an exception
-	 */
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException("Clone is not allowed.");
-	}
+    /**
+     * @return an exception
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException("Clone is not allowed.");
+    }
 }

@@ -20,43 +20,43 @@ import java.util.Objects;
  */
 public class TardisShopDoorKey {
 
-	TardisPrefsDatabase service = TardisPrefsDatabase.getInstance();
-	Connection connection = service.getConnection();
-	FileConfiguration config;
-	Material defaultkey;
+    TardisPrefsDatabase service = TardisPrefsDatabase.getInstance();
+    Connection connection = service.getConnection();
+    FileConfiguration config;
+    Material defaultkey;
 
-	public TardisShopDoorKey(Plugin tardis) {
-		String keypath = tardis.getDataFolder() + File.separator + "config.yml";
-		config = YamlConfiguration.loadConfiguration(new File(keypath));
-		defaultkey = Material.valueOf(Objects.requireNonNull(config.getString("preferences.key")).toUpperCase());
-	}
+    public TardisShopDoorKey(Plugin tardis) {
+        String keypath = tardis.getDataFolder() + File.separator + "config.yml";
+        config = YamlConfiguration.loadConfiguration(new File(keypath));
+        defaultkey = Material.valueOf(Objects.requireNonNull(config.getString("preferences.key")).toUpperCase());
+    }
 
-	public Material getKeyPref(String uuid) {
-		Material key = defaultkey;
-		PreparedStatement statement = null;
-		ResultSet rs = null;
-		String query = "SELECT key FROM player_prefs WHERE uuid = '" + uuid + "'";
-		try {
-			statement = connection.prepareStatement(query);
-			rs = statement.executeQuery();
-			if (rs.isBeforeFirst()) {
-				String thekey = rs.getString("key");
-				key = (!thekey.equals("")) ? Material.valueOf(thekey) : defaultkey;
-			}
-		} catch (SQLException e) {
-			System.err.println("[TARDIS Shop Door] ResultSet error for player_prefs table! " + e.getMessage());
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				if (statement != null) {
-					statement.close();
-				}
-			} catch (SQLException e) {
-				System.err.println("[TARDIS Shop Door] Error closing player_prefs table! " + e.getMessage());
-			}
-		}
-		return key;
-	}
+    public Material getKeyPref(String uuid) {
+        Material key = defaultkey;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        String query = "SELECT key FROM player_prefs WHERE uuid = '" + uuid + "'";
+        try {
+            statement = connection.prepareStatement(query);
+            rs = statement.executeQuery();
+            if (rs.isBeforeFirst()) {
+                String thekey = rs.getString("key");
+                key = (!thekey.equals("")) ? Material.valueOf(thekey) : defaultkey;
+            }
+        } catch (SQLException e) {
+            System.err.println("[TARDIS Shop Door] ResultSet error for player_prefs table! " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("[TARDIS Shop Door] Error closing player_prefs table! " + e.getMessage());
+            }
+        }
+        return key;
+    }
 }
