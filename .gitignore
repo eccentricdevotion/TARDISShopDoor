@@ -13,15 +13,19 @@ build/*
 *.xcworkspace
 xcuserdata
 
+# vscode
+.vscode/*
+
 # svn & cvs
 .svn
 CVS
-/target/classes/
-/target/surefire/
-/target/maven-archiver/
-/target/test-classes/
+/target/
+/sounds/
+/psd/
 /nbproject/
 /bin/
+/movies/
+/OTG_Files/
 
 # other stuff
 .classpath
@@ -30,4 +34,4 @@ CVS
 nb-configuration.xml
 
 .idea/
-/target/
+*.iml
