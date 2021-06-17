@@ -1,9 +1,22 @@
 /*
- *  Copyright 2013 eccentric_nz.
+ * Copyright (C) 2021 eccentric_nz
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package me.eccentric_nz.tardisshopdoor;
 
-import me.eccentric_nz.tardisshopdoor.TardisShopDoor.DIRECTION;
+import me.eccentric_nz.tardisshopdoor.TardisShopDoorPlugin.DIRECTION;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,24 +51,24 @@ public class TardisShopDoorResultSet {
         int type;
         DIRECTION direction;
         PreparedStatement statement = null;
-        ResultSet rs = null;
+        ResultSet resultSet = null;
         try {
             statement = connection.prepareStatement(query);
-            rs = statement.executeQuery();
-            if (rs.isBeforeFirst()) {
-                id = rs.getInt("id");
-                name = rs.getString("name");
-                type = rs.getInt("type");
-                location = rs.getString("location");
-                direction = DIRECTION.valueOf(rs.getString("direction"));
+            resultSet = statement.executeQuery();
+            if (resultSet.isBeforeFirst()) {
+                id = resultSet.getInt("id");
+                name = resultSet.getString("name");
+                type = resultSet.getInt("type");
+                location = resultSet.getString("location");
+                direction = DIRECTION.valueOf(resultSet.getString("direction"));
                 return new TardisShopDoorData(id, name, location, type, direction);
             }
         } catch (SQLException e) {
             System.err.println("[TARDIS Shop Door] ResultSet error for doors table! " + e.getMessage());
         } finally {
             try {
-                if (rs != null) {
-                    rs.close();
+                if (resultSet != null) {
+                    resultSet.close();
                 }
                 if (statement != null) {
                     statement.close();

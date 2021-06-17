@@ -1,15 +1,29 @@
 /*
- *  Copyright 2013 eccentric_nz.
+ * Copyright (C) 2021 eccentric_nz
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package me.eccentric_nz.tardisshopdoor;
 
-import me.eccentric_nz.tardisshopdoor.TardisShopDoor.DIRECTION;
+import me.eccentric_nz.tardisshopdoor.TardisShopDoorPlugin.DIRECTION;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,10 +37,10 @@ import java.util.Objects;
  */
 public class TardisShopDoorListener implements Listener {
 
-    private final TardisShopDoor plugin;
+    private final TardisShopDoorPlugin plugin;
     public float[][] adjustYaw = new float[4][4];
 
-    public TardisShopDoorListener(TardisShopDoor plugin) {
+    public TardisShopDoorListener(TardisShopDoorPlugin plugin) {
         this.plugin = plugin;
         // yaw adjustments if inner and outer door directions are different
         // 0 = EAST, 1 = SOUTH, 2 = WEST, 3 = NORTH
@@ -50,47 +64,47 @@ public class TardisShopDoorListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Player p = event.getPlayer();
-        Block b = event.getClickedBlock();
+        Player player = event.getPlayer();
+        Block block = event.getClickedBlock();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            assert b != null;
-            if (b.getType().equals(Material.IRON_DOOR)) {
-                byte data = b.getData();
+            assert block != null;
+            if (block.getType().equals(Material.IRON_DOOR)) {
+                Bisected bisected = (Bisected) block.getBlockData();
                 // is it the top or bottom half of the door?
-                String loc = (data < 8) ? b.getLocation().toString() : b.getRelative(BlockFace.DOWN).getLocation().toString();
-                if (plugin.trackAdd.containsKey(p.getUniqueId())) {
+                String loc = (bisected.getHalf().equals(Bisected.Half.TOP)) ? block.getLocation().toString() : block.getRelative(BlockFace.DOWN).getLocation().toString();
+                if (plugin.trackAdd.containsKey(player.getUniqueId())) {
                     // we're in add mode
                     // get door direction
-                    String direction = getPlayersDirection(p);
-                    TardisShopDoorAdd a = plugin.trackAdd.get(p.getUniqueId());
-                    int type = a.getType();
+                    String direction = getPlayersDirection(player);
+                    TardisShopDoorAdd shopDoor = plugin.trackAdd.get(player.getUniqueId());
+                    int type = shopDoor.getType();
                     // save the door
-                    new TardisShopDoorQueries().doInsert(a.getName(), loc, type, direction);
+                    new TardisShopDoorQueries().doInsert(shopDoor.getName(), loc, type, direction);
                     if (type == 0) {
-                        a.setType(1);
-                        plugin.trackAdd.put(p.getUniqueId(), a);
-                        p.sendMessage("[TARDIS Door Shop] First door saved! Click on the second door.");
+                        shopDoor.setType(1);
+                        plugin.trackAdd.put(player.getUniqueId(), shopDoor);
+                        player.sendMessage("[TARDIS Door Shop] First door saved! Click on the second door.");
                     } else {
-                        p.sendMessage("[TARDIS Door Shop] Second door saved!");
-                        plugin.trackAdd.remove(p.getUniqueId());
+                        player.sendMessage("[TARDIS Door Shop] Second door saved!");
+                        plugin.trackAdd.remove(player.getUniqueId());
                     }
-                } else if (p.hasPermission("tardis.shop")) {
+                } else if (player.hasPermission("tardis.shop")) {
                     // get their key prefs
-                    Material key = new TardisShopDoorKey(plugin.tardis).getKeyPref(p.getUniqueId().toString());
+                    Material key = new TardisShopDoorKey(plugin.tardis).getKeyPref(player.getUniqueId().toString());
                     // we're in teleport mode
-                    TardisShopDoorResultSet rs = new TardisShopDoorResultSet();
-                    TardisShopDoorData from = rs.resultSet(loc);
+                    TardisShopDoorResultSet resultSet = new TardisShopDoorResultSet();
+                    TardisShopDoorData from = resultSet.resultSet(loc);
                     if (from != null) {
-                        if (p.getInventory().getItemInMainHand().getType().equals(key)) {
+                        if (player.getInventory().getItemInMainHand().getType().equals(key)) {
                             // get the other side of the door
                             int type = (from.getType() == 0) ? 1 : 0;
-                            TardisShopDoorData to = rs.resultSet(from.getName(), type);
+                            TardisShopDoorData to = resultSet.resultSet(from.getName(), type);
                             if (to != null) {
                                 // teleport the player
-                                tp(p, to, from);
+                                tp(player, to, from);
                             }
                         } else {
-                            p.sendMessage("[TARDIS Door Shop] You must click the door with your TARDIS key!");
+                            player.sendMessage("[TARDIS Door Shop] You must click the door with your TARDIS key!");
                         }
                     }
                 }
@@ -98,36 +112,36 @@ public class TardisShopDoorListener implements Listener {
         }
     }
 
-    private void tp(Player p, TardisShopDoorData to, TardisShopDoorData from) {
-        Location l = getLocationFromBukkitString(to.getLocation());
-        assert l != null;
-        int getX = l.getBlockX();
-        int getZ = l.getBlockZ();
+    private void tp(Player player, TardisShopDoorData to, TardisShopDoorData from) {
+        Location loc = getLocationFromBukkitString(to.getLocation());
+        assert loc != null;
+        int getX = loc.getBlockX();
+        int getZ = loc.getBlockZ();
         // adjust position
         switch (to.getDirection()) {
             case EAST -> {
-                l.setX(getX - 0.5);
-                l.setZ(getZ + 0.5);
+                loc.setX(getX - 0.5);
+                loc.setZ(getZ + 0.5);
             }
             case SOUTH -> {
-                l.setX(getX + 0.5);
-                l.setZ(getZ - 0.5);
+                loc.setX(getX + 0.5);
+                loc.setZ(getZ - 0.5);
             }
             case WEST -> {
-                l.setX(getX + 1.5);
-                l.setZ(getZ + 0.5);
+                loc.setX(getX + 1.5);
+                loc.setZ(getZ + 0.5);
             }
             default -> {
-                l.setX(getX + 0.5);
-                l.setZ(getZ + 1.5);
+                loc.setX(getX + 0.5);
+                loc.setZ(getZ + 1.5);
             }
         }
         // set pitch and yaw
-        l.setPitch(p.getLocation().getPitch());
-        l.setYaw(p.getLocation().getYaw() + adjustYaw(from.getDirection(), to.getDirection()));
+        loc.setPitch(player.getLocation().getPitch());
+        loc.setYaw(player.getLocation().getYaw() + adjustYaw(from.getDirection(), to.getDirection()));
         // teleport
-        p.teleport(l);
-        Objects.requireNonNull(l.getWorld()).playEffect(l, Effect.DOOR_TOGGLE, 0);
+        player.teleport(loc);
+        Objects.requireNonNull(loc.getWorld()).playEffect(loc, Effect.DOOR_TOGGLE, 0);
     }
 
     private Location getLocationFromBukkitString(String string) {
@@ -137,7 +151,7 @@ public class TardisShopDoorListener implements Listener {
         String[] xStr = loc_data[1].split("=");
         String[] yStr = loc_data[2].split("=");
         String[] zStr = loc_data[3].split("=");
-        World w = plugin.getServer().getWorld(wStr[2].substring(0, (wStr[2].length() - 1)));
+        World world = plugin.getServer().getWorld(wStr[2].substring(0, (wStr[2].length() - 1)));
         int x;
         int y;
         int z;
@@ -149,40 +163,40 @@ public class TardisShopDoorListener implements Listener {
             System.err.println("[TARDIS Shop Door] Could not convert to number! " + e.getMessage());
             return null;
         }
-        return new Location(w, x, y, z);
+        return new Location(world, x, y, z);
     }
 
-    private float adjustYaw(DIRECTION d1, DIRECTION d2) {
-        return switch (d1) {
-            case EAST -> adjustYaw[0][d2.ordinal()];
-            case SOUTH -> adjustYaw[1][d2.ordinal()];
-            case WEST -> adjustYaw[2][d2.ordinal()];
-            default -> adjustYaw[3][d2.ordinal()];
+    private float adjustYaw(DIRECTION direction1, DIRECTION direction2) {
+        return switch (direction1) {
+            case EAST -> adjustYaw[0][direction2.ordinal()];
+            case SOUTH -> adjustYaw[1][direction2.ordinal()];
+            case WEST -> adjustYaw[2][direction2.ordinal()];
+            default -> adjustYaw[3][direction2.ordinal()];
         };
     }
 
-    public String getPlayersDirection(Player p) {
+    public String getPlayersDirection(Player player) {
         // get player direction
-        float pyaw = p.getLocation().getYaw();
-        if (pyaw >= 0) {
-            pyaw = (pyaw % 360);
+        float playerYaw = player.getLocation().getYaw();
+        if (playerYaw >= 0) {
+            playerYaw = (playerYaw % 360);
         } else {
-            pyaw = (360 + (pyaw % 360));
+            playerYaw = (360 + (playerYaw % 360));
         }
         // determine direction player is facing
-        String d = "";
-        if (pyaw >= 315 || pyaw < 45) {
-            d = "SOUTH";
+        String direction = "";
+        if (playerYaw >= 315 || playerYaw < 45) {
+            direction = "SOUTH";
         }
-        if (pyaw >= 225 && pyaw < 315) {
-            d = "EAST";
+        if (playerYaw >= 225 && playerYaw < 315) {
+            direction = "EAST";
         }
-        if (pyaw >= 135 && pyaw < 225) {
-            d = "NORTH";
+        if (playerYaw >= 135 && playerYaw < 225) {
+            direction = "NORTH";
         }
-        if (pyaw >= 45 && pyaw < 135) {
-            d = "WEST";
+        if (playerYaw >= 45 && playerYaw < 135) {
+            direction = "WEST";
         }
-        return d;
+        return direction;
     }
 }

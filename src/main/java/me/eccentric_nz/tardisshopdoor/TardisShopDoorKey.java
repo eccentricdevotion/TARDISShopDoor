@@ -1,5 +1,18 @@
 /*
- *  Copyright 2013 eccentric_nz.
+ * Copyright (C) 2021 eccentric_nz
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package me.eccentric_nz.tardisshopdoor;
 
@@ -23,32 +36,32 @@ public class TardisShopDoorKey {
     TardisPrefsDatabase service = TardisPrefsDatabase.getInstance();
     Connection connection = service.getConnection();
     FileConfiguration config;
-    Material defaultkey;
+    Material defaultKey;
 
     public TardisShopDoorKey(Plugin tardis) {
-        String keypath = tardis.getDataFolder() + File.separator + "config.yml";
-        config = YamlConfiguration.loadConfiguration(new File(keypath));
-        defaultkey = Material.valueOf(Objects.requireNonNull(config.getString("preferences.key")).toUpperCase());
+        String keyPath = tardis.getDataFolder() + File.separator + "config.yml";
+        config = YamlConfiguration.loadConfiguration(new File(keyPath));
+        defaultKey = Material.valueOf(Objects.requireNonNull(config.getString("preferences.key")).toUpperCase());
     }
 
     public Material getKeyPref(String uuid) {
-        Material key = defaultkey;
+        Material key = defaultKey;
         PreparedStatement statement = null;
-        ResultSet rs = null;
+        ResultSet resultSet = null;
         String query = "SELECT key FROM player_prefs WHERE uuid = '" + uuid + "'";
         try {
             statement = connection.prepareStatement(query);
-            rs = statement.executeQuery();
-            if (rs.isBeforeFirst()) {
-                String thekey = rs.getString("key");
-                key = (!thekey.equals("")) ? Material.valueOf(thekey) : defaultkey;
+            resultSet = statement.executeQuery();
+            if (resultSet.isBeforeFirst()) {
+                String theKey = resultSet.getString("key");
+                key = (!theKey.equals("")) ? Material.valueOf(theKey) : defaultKey;
             }
         } catch (SQLException e) {
             System.err.println("[TARDIS Shop Door] ResultSet error for player_prefs table! " + e.getMessage());
         } finally {
             try {
-                if (rs != null) {
-                    rs.close();
+                if (resultSet != null) {
+                    resultSet.close();
                 }
                 if (statement != null) {
                     statement.close();

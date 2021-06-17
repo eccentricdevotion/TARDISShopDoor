@@ -1,5 +1,18 @@
 /*
- *  Copyright 2013 eccentric_nz.
+ * Copyright (C) 2021 eccentric_nz
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package me.eccentric_nz.tardisshopdoor;
 
@@ -14,24 +27,24 @@ import org.jetbrains.annotations.NotNull;
  */
 public class TardisShopDoorCommands implements CommandExecutor {
 
-    TardisShopDoor plugin;
+    TardisShopDoorPlugin plugin;
 
-    public TardisShopDoorCommands(TardisShopDoor plugin) {
+    public TardisShopDoorCommands(TardisShopDoorPlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command cmd, @NotNull String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("tsd")) {
-            Player p = null;
+    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("tsd")) {
+            Player player = null;
             if (sender instanceof Player) {
-                p = (Player) sender;
+                player = (Player) sender;
             }
-            if (p == null) {
+            if (player == null) {
                 sender.sendMessage("[TARDIS Shop Door] Command can only be run by a player");
                 return true;
             }
-            if (!p.hasPermission("tardis.shopdoor") || p.isOp()) {
+            if (!player.hasPermission("tardis.shopdoor") || player.isOp()) {
                 if (args.length == 1) {
                     // check the name
                     TardisShopDoorData data = new TardisShopDoorResultSet().resultSet(args[0], 0);
@@ -40,10 +53,10 @@ public class TardisShopDoorCommands implements CommandExecutor {
                         TardisShopDoorAdd a = new TardisShopDoorAdd();
                         a.setName(args[0]);
                         a.setType(0);
-                        plugin.trackAdd.put(p.getUniqueId(), a);
-                        p.sendMessage("[TARDIS Door Shop] Click on the first door.");
+                        plugin.trackAdd.put(player.getUniqueId(), a);
+                        player.sendMessage("[TARDIS Door Shop] Click on the first door.");
                     } else {
-                        p.sendMessage("[TARDIS Door Shop] A door set already exists with that name.");
+                        player.sendMessage("[TARDIS Door Shop] A door set already exists with that name.");
                     }
                     return true;
                 }
@@ -53,9 +66,9 @@ public class TardisShopDoorCommands implements CommandExecutor {
                     if (data != null) {
                         // delete records
                         new TardisShopDoorQueries().doDelete(args[1]);
-                        p.sendMessage("[TARDIS Door Shop] The door set called '" + args[1] + "' was removed.");
+                        player.sendMessage("[TARDIS Door Shop] The door set called '" + args[1] + "' was removed.");
                     } else {
-                        p.sendMessage("[TARDIS Door Shop] Could not find a door set with that name.");
+                        player.sendMessage("[TARDIS Door Shop] Could not find a door set with that name.");
                     }
                     return true;
                 }

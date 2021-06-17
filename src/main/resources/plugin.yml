@@ -1,5 +1,5 @@
 authors: [eccentric_nz]
-main: me.eccentric_nz.tardisshopdoor.TARDISShopDoor
+main: me.eccentric_nz.tardisshopdoor.TardisShopDoorPlugin
 name: TARDISShopDoor
 description: Provides a pair of doors to teleport in and out of a TARDIS Shop
 version: 1.0.0
