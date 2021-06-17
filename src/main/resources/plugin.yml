@@ -2,7 +2,8 @@ authors: [eccentric_nz]
 main: me.eccentric_nz.tardisshopdoor.TardisShopDoorPlugin
 name: TARDISShopDoor
 description: Provides a pair of doors to teleport in and out of a TARDIS Shop
-version: 1.0.0
+version: maven-version-number
+build-number: maven-build-number
 api-version: 1.16
 website: http://tardisjenkins.duckdns.org:8080/job/TARDISShopDoor/
 dev-url: http://github.com/eccentricdevotion/TARDISShopDoor/
