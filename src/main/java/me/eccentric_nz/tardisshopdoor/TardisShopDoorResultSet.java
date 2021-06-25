@@ -16,8 +16,6 @@
  */
 package me.eccentric_nz.tardisshopdoor;
 
-import me.eccentric_nz.tardisshopdoor.TardisShopDoorPlugin.DIRECTION;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,7 +47,7 @@ public class TardisShopDoorResultSet {
         String name;
         String location;
         int type;
-        DIRECTION direction;
+        TardisShopDoorPlugin.CardinalDirection cardinalDirection;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         try {
@@ -60,8 +58,8 @@ public class TardisShopDoorResultSet {
                 name = resultSet.getString("name");
                 type = resultSet.getInt("type");
                 location = resultSet.getString("location");
-                direction = DIRECTION.valueOf(resultSet.getString("direction"));
-                return new TardisShopDoorData(id, name, location, type, direction);
+                cardinalDirection = TardisShopDoorPlugin.CardinalDirection.valueOf(resultSet.getString("direction"));
+                return new TardisShopDoorData(id, name, location, type, cardinalDirection);
             }
         } catch (SQLException e) {
             System.err.println("[TARDIS Shop Door] ResultSet error for doors table! " + e.getMessage());

@@ -16,7 +16,7 @@
  */
 package me.eccentric_nz.tardisshopdoor;
 
-import me.eccentric_nz.tardisshopdoor.TardisShopDoorPlugin.DIRECTION;
+import me.eccentric_nz.tardisshopdoor.TardisShopDoorPlugin.CardinalDirection;
 
 /**
  * @author eccentric_nz
@@ -27,14 +27,14 @@ public class TardisShopDoorData {
     private final String name;
     private final String location;
     private final int type;
-    private final DIRECTION direction;
+    private final CardinalDirection cardinalDirection;
 
-    public TardisShopDoorData(int id, String name, String location, int type, DIRECTION direction) {
+    public TardisShopDoorData(int id, String name, String location, int type, CardinalDirection cardinalDirection) {
         this.id = id;
         this.name = name;
         this.location = location;
         this.type = type;
-        this.direction = direction;
+        this.cardinalDirection = cardinalDirection;
     }
 
     public int getId() {
@@ -53,7 +53,7 @@ public class TardisShopDoorData {
         return type;
     }
 
-    public DIRECTION getDirection() {
-        return direction;
+    public CardinalDirection getDirection() {
+        return cardinalDirection;
     }
 }

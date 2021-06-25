@@ -68,7 +68,7 @@ public class TardisShopDoorPlugin extends JavaPlugin {
         }
     }
 
-    public enum DIRECTION {
+    public enum CardinalDirection {
 
         EAST,
         SOUTH,

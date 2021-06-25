@@ -16,7 +16,7 @@
  */
 package me.eccentric_nz.tardisshopdoor;
 
-import me.eccentric_nz.tardisshopdoor.TardisShopDoorPlugin.DIRECTION;
+import me.eccentric_nz.tardisshopdoor.TardisShopDoorPlugin.CardinalDirection;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -166,12 +166,12 @@ public class TardisShopDoorListener implements Listener {
         return new Location(world, x, y, z);
     }
 
-    private float adjustYaw(DIRECTION direction1, DIRECTION direction2) {
-        return switch (direction1) {
-            case EAST -> adjustYaw[0][direction2.ordinal()];
-            case SOUTH -> adjustYaw[1][direction2.ordinal()];
-            case WEST -> adjustYaw[2][direction2.ordinal()];
-            default -> adjustYaw[3][direction2.ordinal()];
+    private float adjustYaw(CardinalDirection cardinalDirection1, CardinalDirection cardinalDirection2) {
+        return switch (cardinalDirection1) {
+            case EAST -> adjustYaw[0][cardinalDirection2.ordinal()];
+            case SOUTH -> adjustYaw[1][cardinalDirection2.ordinal()];
+            case WEST -> adjustYaw[2][cardinalDirection2.ordinal()];
+            default -> adjustYaw[3][cardinalDirection2.ordinal()];
         };
     }
 
