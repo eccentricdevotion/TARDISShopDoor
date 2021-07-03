@@ -49,7 +49,7 @@ public class TardisShopDoorPlugin extends JavaPlugin {
         saveDefaultConfig();
         loadDatabases();
         getServer().getPluginManager().registerEvents(new TardisShopDoorListener(this), this);
-        Objects.requireNonNull(getCommand("tsd")).setExecutor(new TardisShopDoorCommands(this));
+        getCommand("tsd").setExecutor(new TardisShopDoorCommands(this));
     }
 
     private void loadDatabases() {
@@ -60,7 +60,6 @@ public class TardisShopDoorPlugin extends JavaPlugin {
             service.createTables();
             // TARDIS database
             tardis = getServer().getPluginManager().getPlugin("TARDIS");
-            assert tardis != null;
             String keyPath = tardis.getDataFolder() + File.separator + "TARDIS.db";
             keyPrefs.setConnection(keyPath);
         } catch (Exception e) {

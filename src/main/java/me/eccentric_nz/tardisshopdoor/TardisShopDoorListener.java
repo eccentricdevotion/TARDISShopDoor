@@ -67,7 +67,6 @@ public class TardisShopDoorListener implements Listener {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            assert block != null;
             if (block.getType().equals(Material.IRON_DOOR)) {
                 Bisected bisected = (Bisected) block.getBlockData();
                 // is it the top or bottom half of the door?
@@ -114,7 +113,6 @@ public class TardisShopDoorListener implements Listener {
 
     private void tp(Player player, TardisShopDoorData to, TardisShopDoorData from) {
         Location loc = getLocationFromBukkitString(to.getLocation());
-        assert loc != null;
         int getX = loc.getBlockX();
         int getZ = loc.getBlockZ();
         // adjust position
@@ -141,7 +139,7 @@ public class TardisShopDoorListener implements Listener {
         loc.setYaw(player.getLocation().getYaw() + adjustYaw(from.getDirection(), to.getDirection()));
         // teleport
         player.teleport(loc);
-        Objects.requireNonNull(loc.getWorld()).playEffect(loc, Effect.DOOR_TOGGLE, 0);
+        loc.getWorld().playEffect(loc, Effect.DOOR_TOGGLE, 0);
     }
 
     private Location getLocationFromBukkitString(String string) {

@@ -41,7 +41,7 @@ public class TardisShopDoorKey {
     public TardisShopDoorKey(Plugin tardis) {
         String keyPath = tardis.getDataFolder() + File.separator + "config.yml";
         config = YamlConfiguration.loadConfiguration(new File(keyPath));
-        defaultKey = Material.valueOf(Objects.requireNonNull(config.getString("preferences.key")).toUpperCase());
+        defaultKey = Material.valueOf(config.getString("preferences.key").toUpperCase());
     }
 
     public Material getKeyPref(String uuid) {
