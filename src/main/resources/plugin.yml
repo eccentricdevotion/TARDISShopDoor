@@ -1,14 +1,14 @@
-authors: [eccentric_nz]
+authors: [ eccentric_nz ]
 main: me.eccentric_nz.tardisshopdoor.TardisShopDoorPlugin
 name: TARDISShopDoor
 description: Provides a pair of doors to teleport in and out of a TARDIS Shop
 version: ${project.version}
 api-version: 1.17
-website: http://tardisjenkins.duckdns.org:8080/job/TARDISShopDoor/
-dev-url: http://github.com/eccentricdevotion/TARDISShopDoor/
-url: http://eccentricdevotion.github.io/TARDIS/
 load: POSTWORLD
-depend: [TARDIS]
+depend: [ TARDIS ]
+website: http://tardisjenkins.duckdns.org:8080/job/TARDISShopDoor/
+dev-url: https://github.com/eccentricdevotion/TARDISShopDoor/
+url: http://eccentricdevotion.github.io/TARDIS/
 permissions:
   tardis.shopdoor:
     description: Allow players to add and remove TARDIS Shop Doors.
